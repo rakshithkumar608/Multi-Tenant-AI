@@ -1,23 +1,25 @@
 const aiService = require("../services/ai.service");
 
-exports.askQuestion = async (req, res) => {
+exports.upload = async (req, res) => {
   try {
-    const { question } = req.body;
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
 
     const tenantId = req.user.tenantId; // ✅ real tenant
 
-    const answer = await aiService.askAI(question, tenantId);
+    await aiService.uploadFile(req.file, tenantId);
 
     res.json({
       success: true,
-      answer
+      message: "Uploaded & trained ✅",
     });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 };

@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 
-router.post("/ask", askQuestion);
+router.post("/ask", auth, askQuestion);
 router.get("/test", (req, res) => {
   res.send("Chat route working");
 });

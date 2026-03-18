@@ -17,18 +17,20 @@ exports.signup = async (req, res) => {
             tenantId: tenant._id,
         });
 
-        const token = jwt.sign(
-        { userId: user._id, tenant: user.tenantId },
-        process.env.JWT_SECRET
-        )
+        const token = jwt.sign({
+  userId: user._id,
+  tenantId: user.tenantId
+}, process.env.JWT_SECRET);
 
         res.json({ token });
-    } catch (error) {
-        res.status(500).json({ error: err.message })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Server error" })
     }
 };
 
 exports.login = async (req, res) => {
+    console.log("GENERATING TOKEN WITH tenantId");
     try {
         const {email, password} = req.body;
 
@@ -48,9 +50,11 @@ exports.login = async (req, res) => {
             { userId: user._id, tenantId: user.tenantId},
             process.env.JWT_SECRET
         );
+        console.log("NEW TOKEN:", token);
+        
         res.json({ token })
     } catch (error) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

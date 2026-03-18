@@ -1,29 +1,18 @@
 const axios = require("axios");
+const FormData = require("form-data");
 
-
-const PYTHON_API = process.env.PYTHON_API;
-console.log("Python API:", PYTHON_API);
-
-exports.askAI = async (question, tenantId) => {
-    const response = await axios.post(`${PYTHON_API}/ask`, {
-        question,
-        tenant_id: tenantId,
-    });
-
-    return response.data.answer;
-};
+const PYTHON_API = "http://localhost:8000";
 
 exports.uploadFile = async (file, tenantId) => {
-    const formData = new FormData();
-    formData.append("file", file.buffer, file.originalname);
+  const formData = new FormData();
 
-    await axios.post(
-        `${PYTHON_API}/upload?tenant_id=${tenantId}`,
+  formData.append("file", file.buffer, file.originalname);
+
+  await axios.post(
+    `${PYTHON_API}/upload?tenant_id=${tenantId}`,
     formData,
     {
-    headers: formData.getHeaders(),
+      headers: formData.getHeaders(),
     }
-    );
-
-    await axios.post(`${PYTHON_API}/train/${tenantId}`)
-}
+  );
+};
