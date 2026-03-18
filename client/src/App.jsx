@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 import History from "./pages/History";
+import MainLayout from "./layouts/MainLayout";
 
 
 const App = () => {
@@ -13,11 +14,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Signup />}/>
         <Route path="/login" element={<Login />}/>
+
+        <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="/upload" element={<Upload />}/>
         <Route path="/history" element={<History />}/>
-      </Routes>
-    
+        </Route>
+      </Routes> 
   )
 }
 

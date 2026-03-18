@@ -3,41 +3,44 @@ import { getHistory } from "../services/chat";
 import { toast } from "react-hot-toast";
 
 export default function History() {
-  const [data, setData] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchHistory();
+    load();
   }, []);
 
-  const fetchHistory = async () => {
+  const load = async () => {
     try {
-      const res = await getHistory();
-
-      console.log("HISTORY:", res.data); 
-
-      setData(res.data || []);
-    } catch {
-      toast.error("Failed to load history");
+      const msgs = await getHistory();
+      setMessages(msgs);
+      toast.success("History loaded 📜");
+    } catch (err) {
+      toast.error("Failed to load history ❌", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-10 space-y-2">
+    <div className="space-y-4">
       <h2 className="text-xl font-semibold">Chat History</h2>
 
-      {data.length === 0 ? (
+      {loading ? (
+        <p className="text-gray-400">Loading...</p>
+      ) : messages.length === 0 ? (
         <p className="text-gray-500">No history yet</p>
       ) : (
-        data.map((msg, i) => (
+        messages.map((m, i) => (
           <div
             key={i}
             className={`p-3 rounded ${
-              msg.role === "user"
+              m.role === "user"
                 ? "bg-blue-100 text-right"
                 : "bg-gray-200 text-left"
             }`}
           >
-            {msg.content}
+            {m.content}
           </div>
         ))
       )}

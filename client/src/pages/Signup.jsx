@@ -15,6 +15,7 @@ const Signup = () => {
     const res = await signupUser(form);
 
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
     navigate("/dashboard");
   };
 

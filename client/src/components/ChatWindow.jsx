@@ -1,41 +1,71 @@
-import React, { useState } from 'react'
-import { askAI } from "../services/chat";
+import { useEffect, useState } from "react";
+import { askAI, getChatById } from "../services/chat";
 
-const ChatWindow = () => {
+export default function ChatWindow({ chatId, setChatId }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
+  useEffect(() => {
+    if (chatId) {
+      loadChat(chatId);
+    } else {
+      setMessages([]);
+    }
+  }, [chatId]);
+
+  const loadChat = async (id) => {
+    const res = await getChatById(id);
+    setMessages(res.messages);
+  };
+
   const send = async () => {
-    const res = await askAI(input);
+    if (!input.trim()) return;
+
+    const res = await askAI(input, chatId);
+
+    localStorage.setItem("chatId", res.chatId);
+    setChatId(res.chatId);
 
     setMessages([
       ...messages,
-      {role: "user", text: input},
-      {role: "ai", text: res.data.answer},
+      { role: "user", content: input },
+      { role: "ai", content: res.answer },
     ]);
+
     setInput("");
-  }
+  };
 
   return (
-    <div className='bg-white p-4 rounded shadow h-full flex flex-col'>
-      <div className="flex-1 overflow-y-auto">
-        {messages.map((m,i) => (
-          <div key={i}>{m.text}</div>
+    <div className="bg-white h-full flex flex-col p-4 rounded shadow">
+
+      {/* MESSAGES */}
+      <div className="flex-1 overflow-y-auto space-y-2">
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            className={m.role === "user" ? "text-right" : "text-left"}
+          >
+            <span className="bg-gray-200 px-3 py-2 rounded inline-block">
+              {m.content}
+            </span>
+          </div>
         ))}
       </div>
 
-      <div className="flex gap-2 mt-4">
-        <input 
-        value={input} 
-        onChange={(e) => setInput(e.target.value)}
-         className='flex-1 border p-2' 
+      {/* INPUT */}
+      <div className="flex mt-4 gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="border p-2 flex-1 rounded"
         />
-        <button onClick={send} className='bg-black text-white px-4'>
+        <button
+          onClick={send}
+          className="bg-black text-white px-4 rounded"
+        >
           Send
         </button>
       </div>
     </div>
-  )
+  );
 }
-
-export default ChatWindow

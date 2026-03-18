@@ -1,22 +1,16 @@
+import { useState } from "react";
+import ChatWindow from "../components/ChatWindow";
 
-import Sidebar from '../components/Sidebar'
-import Navbar from '../components/Navbar'
-import ChatWindow from '../components/ChatWindow'
+export default function Dashboard() {
+  const [chatId, setChatId] = useState(
+    localStorage.getItem("chatId")
+  );
 
-const Dashboard = () => {
   return (
-    <div className='flex h-screen'>
-      <Sidebar />
-
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-
-        <div className="p-6 bg-gray-50 flex-1">
-          <ChatWindow />
-        </div>
+    <div className="flex h-screen">
+      <div className="flex-1">
+        <ChatWindow chatId={chatId} setChatId={setChatId} />
       </div>
     </div>
-  )
+  );
 }
-
-export default Dashboard

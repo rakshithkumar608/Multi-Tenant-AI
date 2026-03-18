@@ -1,9 +1,9 @@
 const cors = require('cors');
 const express = require('express');
 
-const chatRoutes = require("./routes/chat.routes");
-const authRoutes = require("./routes/auth.routes");
-const uploadRoutes = require("./routes/upload.routes");
+const chatRoutes = require("./src/routes/chat.routes");
+const authRoutes = require("./src/routes/auth.routes");
+const uploadRoutes = require("./src/routes/upload.routes");
 
 const app = express();
 
