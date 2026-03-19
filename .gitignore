@@ -1,5 +1,5 @@
 .env
-
+requirements-dev.txt
 venv
 node_modules
 .gitignore
