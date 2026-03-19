@@ -13,9 +13,17 @@ const TypingEffect = ({ text, speed = 20 }) => {
     }, speed);
 
     return () => clearInterval(interval);
-  }, [text]);
+  }, [text, speed]);
 
-  return <span>{displayed}</span>;
+  return (
+    <span className="font-['Outfit'] font-medium text-[#121212] relative inline-block">
+      {displayed}
+     
+      {displayed.length < text.length && (
+        <span className="inline-block w-2 h-4 bg-[#1040C0] ml-0.5 animate-pulse" />
+      )}
+    </span>
+  );
 };
 
 export default TypingEffect;

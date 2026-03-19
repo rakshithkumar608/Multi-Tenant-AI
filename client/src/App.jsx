@@ -8,10 +8,13 @@ import History from "./pages/History";
 import MainLayout from "./layouts/MainLayout";
 
 
+
 const App = () => {
   return (
+   
     
       <Routes>
+       
         <Route path="/" element={<Signup />}/>
         <Route path="/login" element={<Login />}/>
 

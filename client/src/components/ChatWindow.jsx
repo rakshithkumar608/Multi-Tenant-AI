@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
+import { Circle, Square, Triangle, Send, StopCircle, RefreshCw } from "lucide-react";
 
-/* 🔥 STREAM WITH ABORT SUPPORT */
 const streamAI = async (question, chatId, onChunk, signal) => {
   const token = localStorage.getItem("token");
 
@@ -41,12 +41,12 @@ const ChatWindow = ({ chatId }) => {
   const bottomRef = useRef();
   const controllerRef = useRef(null);
 
-  /* ✅ AUTO SCROLL */
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  /* 🔥 LOAD CHAT */
+
   useEffect(() => {
     const loadChat = async () => {
       if (!chatId) {
@@ -75,7 +75,7 @@ const ChatWindow = ({ chatId }) => {
     loadChat();
   }, [chatId]);
 
-  /* 🔥 CLEAN JSON PARSER */
+ 
   const extractAnswer = (text) => {
     try {
       const parsed = JSON.parse(text);
@@ -85,7 +85,7 @@ const ChatWindow = ({ chatId }) => {
     }
   };
 
-  /* ✅ SEND MESSAGE */
+  
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
@@ -150,13 +150,13 @@ const ChatWindow = ({ chatId }) => {
     setLoading(false);
   };
 
-  /* ✏️ EDIT MESSAGE */
+ 
   const handleEdit = (index, text) => {
     setInput(text);
     setEditIndex(index);
   };
 
-  /* 🔁 REGENERATE */
+
   const handleRegenerate = () => {
     const lastUser = [...messages].reverse().find(m => m.role === "user");
     if (lastUser) {
@@ -166,73 +166,121 @@ const ChatWindow = ({ chatId }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 relative">
-      {/* 🧠 Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+    <div className="flex flex-col h-full bg-[#F0F0F0] relative font-['Outfit']">
+      
+    
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
         {messages.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-gray-400">
-            Start a conversation 🚀
+          
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center space-y-6 max-w-md">
+              
+              <div className="flex justify-center gap-3">
+                <div className="w-12 h-12 bg-[#D02020] border-2 border-[#121212] rotate-45 animate-pulse" />
+                <Circle className="w-12 h-12 fill-[#1040C0] text-[#1040C0] animate-pulse" strokeWidth={0} style={{ animationDelay: '150ms' }} />
+                <div className="w-12 h-12 bg-[#F0C020] border-2 border-[#121212] animate-pulse" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)', animationDelay: '300ms' }} />
+              </div>
+              
+              <div className="space-y-2">
+                <p className="text-xl font-black uppercase tracking-tight text-[#121212]">
+                  Start a Conversation
+                </p>
+                <p className="text-sm font-medium text-[#121212]/60">
+                  Ask me anything to begin
+                </p>
+              </div>
+            </div>
           </div>
         ) : (
-          messages.map((msg, i) => (
-            <MessageBubble
-              key={i}
-              role={msg.role}
-              content={msg.content}
-              index={i}
-              onEdit={handleEdit}
-            />
-          ))
-        )}
+          
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {messages.map((msg, i) => (
+              <MessageBubble
+                key={i}
+                role={msg.role}
+                content={msg.content}
+                index={i}
+                onEdit={handleEdit}
+              />
+            ))}
 
-        {loading && (
-          <div className="text-gray-400 text-sm animate-pulse">
-            AI is typing...
+           
+            {loading && (
+              <div className="flex items-center gap-3 p-4 bg-white border-2 border-[#121212] shadow-[3px_3px_0px_0px_rgba(18,18,18,1)] max-w-xs">
+                <Square className="w-4 h-4 fill-[#D02020] text-[#D02020]" strokeWidth={0} />
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-[#121212] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-[#121212] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-[#121212] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#121212]/60">
+                  AI is typing
+                </span>
+              </div>
+            )}
+
+            <div ref={bottomRef} />
           </div>
         )}
-
-        <div ref={bottomRef} />
       </div>
 
-      {/* 🔁 Regenerate */}
+
       {!loading && messages.length > 0 && (
-        <div className="px-6 pb-2">
+        <div className="px-4 sm:px-6 pb-3 max-w-4xl mx-auto w-full">
           <button
             onClick={handleRegenerate}
-            className="text-sm text-blue-500"
+            className="flex items-center gap-2 bg-white text-[#121212] px-4 py-2 border-2 border-[#121212] font-bold uppercase text-xs tracking-widest shadow-[3px_3px_0px_0px_rgba(18,18,18,1)] hover:bg-[#F0C020] hover:shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-200"
           >
-            🔄 Regenerate
+            <RefreshCw className="w-3 h-3" strokeWidth={3} />
+            Regenerate
           </button>
         </div>
       )}
 
-      {/* ✍️ Input */}
-      <div className="border-t p-4 bg-white flex gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask something..."
-          className="flex-1 border rounded-lg px-4 py-2 outline-none"
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
+     
+      <div className="border-t-4 border-[#121212] p-4 bg-white">
+        <div className="flex gap-2 sm:gap-3 max-w-4xl mx-auto">
+          
+        
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask something..."
+              className="w-full border-2 border-[#121212] px-4 py-3 bg-[#F0F0F0] focus:outline-none focus:ring-2 focus:ring-[#1040C0] focus:ring-offset-2 font-medium text-sm transition-all placeholder:text-[#121212]/40"
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            />
+          
+            <div className="absolute top-2 right-2 w-2 h-2 bg-[#F0C020] rounded-full" />
+          </div>
 
-        {loading ? (
-          <button
-            onClick={() => controllerRef.current?.abort()}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg"
-          >
-            Stop
-          </button>
-        ) : (
-          <button
-            onClick={handleSend}
-            disabled={!input.trim()}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Send
-          </button>
-        )}
+         
+          {loading ? (
+           
+            <button
+              onClick={() => controllerRef.current?.abort()}
+              className="bg-[#D02020] text-white px-4 sm:px-6 py-3 border-4 border-[#121212] font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] hover:bg-[#D02020]/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-200 flex items-center gap-2"
+            >
+              <StopCircle className="w-4 h-4" strokeWidth={3} />
+              <span className="hidden sm:inline">Stop</span>
+            </button>
+          ) : (
+         
+            <button
+              onClick={handleSend}
+              disabled={!input.trim()}
+              className={`px-4 sm:px-6 py-3 border-4 border-[#121212] font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] transition-all duration-200 flex items-center gap-2 ${
+                input.trim()
+                  ? 'bg-[#1040C0] text-white hover:bg-[#1040C0]/90 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none cursor-pointer'
+                  : 'bg-[#E0E0E0] text-[#121212]/40 cursor-not-allowed'
+              }`}
+            >
+              <Send className="w-4 h-4" strokeWidth={3} />
+              <span className="hidden sm:inline">Send</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
