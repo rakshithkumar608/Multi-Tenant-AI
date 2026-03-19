@@ -38,7 +38,6 @@ export default function Sidebar({ chatId, setChatId }) {
 
   return (
     <div className="w-64 bg-black text-white p-4 flex flex-col">
-
       <h1 className="text-lg font-bold mb-4">AI SaaS</h1>
 
       {/* NEW CHAT */}
@@ -62,9 +61,9 @@ export default function Sidebar({ chatId, setChatId }) {
           >
             <div
               onClick={() => handleSelect(chat.chatId)}
-              className="cursor-pointer flex-1"
+              className="cursor-pointer flex-1 truncate"
             >
-              {chat.title}
+              {chat.title || "Untitled"}
             </div>
 
             <button

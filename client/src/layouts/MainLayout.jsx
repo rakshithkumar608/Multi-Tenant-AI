@@ -1,21 +1,20 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
 
-export default function MainLayout() {
-  const token = localStorage.getItem("token");
-
-  if (!token) return <Navigate to="/login" />;
+export default function Layout() {
+  const [chatId, setChatId] = useState(
+    localStorage.getItem("chatId")
+  );
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      {/* ✅ Sidebar always visible */}
+      <Sidebar chatId={chatId} setChatId={setChatId} />
 
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-        <div className="p-6 bg-gray-50 flex-1 overflow-y-auto">
-          <Outlet />
-        </div>
+      {/* ✅ Pass state to pages via Outlet */}
+      <div className="flex-1">
+        <Outlet context={{ chatId, setChatId }} />
       </div>
     </div>
   );

@@ -1,16 +1,8 @@
-import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import ChatWindow from "../components/ChatWindow";
 
 export default function Dashboard() {
-  const [chatId, setChatId] = useState(
-    localStorage.getItem("chatId")
-  );
+  const { chatId } = useOutletContext();
 
-  return (
-    <div className="flex h-screen">
-      <div className="flex-1">
-        <ChatWindow chatId={chatId} setChatId={setChatId} />
-      </div>
-    </div>
-  );
+  return <ChatWindow chatId={chatId} />;
 }
